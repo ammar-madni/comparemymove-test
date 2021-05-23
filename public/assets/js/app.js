@@ -13,10 +13,10 @@ const moreLinks = document.querySelectorAll('.matches__match__more')
 
 if (moreLinks) {
   moreLinks.forEach(
-    item => {
-      item.addEventListener(
+    link => {
+      link.addEventListener(
         'click', () => {
-        let details = item.parentNode.querySelector('.matches__match__details').style
+        let details = link.parentNode.querySelector('.matches__match__details').style
         details.display === 'none' ?
         details.display = 'block' :
         details.display = 'none' 

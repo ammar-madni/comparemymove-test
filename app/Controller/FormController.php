@@ -15,12 +15,12 @@ class FormController extends Controller
     {
         $matcher = new CompanyMatcher($this->db());
 
-        $matchCriteria = ['bedrooms'];
+        $matchCriteria = ['postcode'];
         // use html attribute name
         // remember company settings table only has 3 settings.
         
         $matchedCompanies = $matcher
-            ->criteria($matchCriteria) //optional, default is all 3 settings.
+            // ->criteria($matchCriteria) //optional, default is all 3 settings.
             ->match($request)
             ->pick($_ENV['MAX_MATCHED_COMPANIES']) //optional
             ->results();
