@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:  
+  database:
+    image: mysql:latest
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - ./db_data:/var/lib/mysql
+      - .:/docker-entrypoint-initdb.d
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: '${DB_NAME}'
+      MYSQL_USER: '${DB_USER}'
+      MYSQL_PASSWORD: '${DB_PASSWORD}'
+    networks:
+      default:
+        aliases:
+          - '${DB_HOST}'
+  webserver:
+    depends_on: 
+      - database
+    build: 
+      context: .
+      dockerfile: .docker/Dockerfile
+    command: ['/usr/bin/wait-for-it.sh', 'database:3306', '--strict', '--timeout=100', '--', 'docker-php-entrypoint', 'apache2-foreground']
+    volumes:
+      - .:/var/www/html
+    restart: always
+    ports:
+      - 8000:80
+  phpmyadmin:
+    depends_on:
+      - database
+    image: phpmyadmin:latest
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      PMA_HOST: database
+      MYSQL_ROOT_PASSWORD: password

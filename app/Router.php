@@ -24,7 +24,7 @@ class Router
             if ($route['type'] == $type) {
                 [ $controller, $method ] = explode('@', $route['handler']);
                 $controller = sprintf('App\Controller\%s', $controller);
-    
+                
                 $request = new $controller();
                 $request->{$method}($params);
                 $match = true;

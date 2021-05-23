@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use Twig\Loader\FilesystemLoader;
+use Twig\Environment;
+
 abstract class Controller
 {
     protected $db;
@@ -37,8 +40,8 @@ abstract class Controller
      */
     protected function render(string $view, array $params = [])
     {
-        $loader = new \Twig\Loader\FilesystemLoader(__DIR__ . '/../../resources/views');
-        $twig = new \Twig\Environment($loader);
+        $loader = new FilesystemLoader(__DIR__ . '/../../resources/views');
+        $twig = new Environment($loader);
 
         echo $twig->render(sprintf('layouts/%s', $view), $params);
     }
