@@ -28,7 +28,7 @@ class CompanyMatcher
     {
         $criteria = array_flip($criteria);
 
-        foreach($criteria as $key => &$value) {
+        foreach ($criteria as $key => &$value) {
             $value = '';
         }
 
@@ -64,7 +64,7 @@ class CompanyMatcher
 
     private function setCriteriaValues(array $request): void
     {
-        foreach($this->criteria as $criteria => &$criteriaValue) {
+        foreach ($this->criteria as $criteria => &$criteriaValue) {
             $criteriaValue = $request[$criteria];
             filter_var($criteriaValue, FILTER_SANITIZE_STRING);
             
@@ -87,7 +87,7 @@ class CompanyMatcher
                     ON c.id = cms.company_id
                     WHERE active = 1 AND credits > 0 ';
 
-        foreach($this->criteria as $criteria => $criteriaValue) {
+        foreach ($this->criteria as $criteria => $criteriaValue) {
             // db uses plural for column name, find cleaner solution for all situations like this.
             if ($criteria === 'postcode') {
                 $query .= "AND postcodes LIKE :$criteria ";
@@ -114,7 +114,7 @@ class CompanyMatcher
 
         $statement = $this->db->prepare($query);
 
-        foreach($this->criteria as $criteria => $criteriaValue) {
+        foreach ($this->criteria as $criteria => $criteriaValue) {
             // type column is not an array
             if ($criteria === 'type') {
                 $statement->bindValue(":$criteria", "%$criteriaValue%");
@@ -151,7 +151,7 @@ class CompanyMatcher
 
             $listOfIds = array_column($this->matches, 'company_id');
 
-            foreach($listOfIds as $index => $id) {
+            foreach ($listOfIds as $index => $id) {
                 if ($index === count($listOfIds) - 1) {
                     $query .= ":$index)";
                 } else {
@@ -161,14 +161,14 @@ class CompanyMatcher
             
             $statement = $this->db->prepare($query);
             
-            foreach($listOfIds as $index => $id) {
+            foreach ($listOfIds as $index => $id) {
                 $statement->bindValue(":$index", intval($id));
             }
 
             $statement->execute();
             $statement->closeCursor();
 
-            foreach($this->matches as &$match) {
+            foreach ($this->matches as &$match) {
                 if ($match['credits'] === '1') {
                     // strval to mantain same data type as database.
                     $match['credits'] = strval($match['credits']--);
